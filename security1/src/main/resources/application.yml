@@ -11,9 +11,8 @@ spring:
   datasource:
     driver-class-name: com.mysql.cj.jdbc.Driver
     url: jdbc:mysql://localhost:3306/security?serverTimezone=Asia/Seoul
-    username: root
-    password: Wngurdl1!
-
+    username: 
+    password: 
   jpa:
     hibernate:
       ddl-auto: update #create update none
@@ -26,22 +25,22 @@ spring:
       client:
         registration:
           google:
-           client-id: 553287847132-hdoc70tg868k86b5g77aqdpq4n0vpn71.apps.googleusercontent.com
-           client-secret: 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
+           client-id:
+           client-secret:
            scope:
            - email
            - profile
 
           facebook:
-           client-id: 217536154589182
-           client-secret: bb900b0ba9f6a6c7b6b153d8393416b1
+           client-id: 
+           client-secret: 
            scope:
            - email
            - public_profile
 
           naver:
-            client-id: vKHDE0ibxCNbHOr0ZjZZ
-            client-secret: BUV8VVOuD5
+            client-id: 
+            client-secret: 
             scope:
               - name
               - email
@@ -51,8 +50,8 @@ spring:
             redirect-uri: http://localhost:8080/login/oauth2/code/naver
 
           kakao:
-            client-id: e99f22caa4277828a4112f9eb4491839
-            client-secret: JrNsIxmOqRChbeczuH96ofemyEFTb17d
+            client-id: 
+            client-secret: 
             scope:
               - profile_nickname
               - account_email
