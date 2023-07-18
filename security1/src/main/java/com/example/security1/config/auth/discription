@@ -1,0 +1,64 @@
+소셜 로그인 성공하면, 소셜측 서버에서 성공했다는 code를 건네줌
+
+해당 code로 우리는 Access Token을 요청
+
+이 Access Token을 받으면, 우리 서버가 구글 서버에 사용자의 개인 정보 등 민감한 정보에 접근 가능 권한 생김
+
+이를 얻기 위해 필요한 것이 code. 이 code를 받을 주소가 '승인된 리디렉션 URI'
+
+Oauth Client라는 Library를 쓰면 해당 URI는
+
+http://localhost:8080/login/oauth/code/google 로 고정!!
+
+
+--------
+
+1. 코드받기 (해당 소셜 사용자가 맞으니 코드를 줌:인증)
+
+2. 액세스토큰 (해당 사용자의 정보에 대한 접근 권한 가짐:권한)
+
+3. 사용자 프로필 정보를 가져오고
+
+4-1. 그 정보를 토대로 회원가입을 자동으로 진행시키기도 함
+
+4-2. (이메일, 전화번호, 이름, 아이디) 쇼핑몰 -> (집주소), 백화점 몰 -> (vip등급,일반등급)
+과 같이 추가 정보 필요 시,
+추가적인 회원가입 창이 나와서 회원가입을 해야함. 추가 구성 정보가 필요 없다면, 기본적인 정보로만 자동 회원가입 (4-1)
+
+---------
+구글 로그인이 완료된 뒤의 후처리가 필요함.
+⭐TIP⭐구글 로그인이 완료가 되면, 코드를 받는게 X,
+(액세스 토큰 + 시용자 프로필 정보 O)을 한 번에 받음. 즉, Oauth Client 라이브러리 쓰면 굉장히 편리
+
+------------------
+진행시킬 사용자 프로필 정보 ( 아래 정보로 google로그인하면 가제 회원가입 시킬 것임 )
+username = google_114400574433436008389
+password = "암호화(겟인데어)"
+email = ivg07047@gmail.com
+roel = "ROLE_USER"
+provider = "google"
+providerId = 114400574433436008389
+
+--------------------------------
+스프링 시큐리티는 Server 고유의 session안에 자기만의 Security session을 가지고 있음.
+Security session안에 들어갈 수 있는 Type은 Authentication타입임. 컨트롤러에서 DI
+이 Autentication타입 안에는 1.UserDetails 2.OAuth2User 타입 들어갈 수 있음
+
+UserDetails -> 일반 로그인
+OAuth2User -> 소셜 로그인
+
+--------
+⭐PrincipalDetails Class 만든 이유⭐
+회원 가입을 하기 위해서는 User 객체의 Attributes가 필요
+
+하지만, OAuth2User와 UserDetails는 User객체를 가지고 있지 않음
+그래서 PrincipalDetails Class를 하나 만들고, UserDetails를 implementation하여
+이 class 내부에 User객체를 품었다.
+
+-----------
+OAuth2-Client 라이브러리 사용하면
+기본적으로 provider에는 구글,페북,트위터... 기본 제공자로 제공해줌
+네이버,카카오는 없음⭐ =>스스로 등록해주어야함
+이유: 포털사이트마다 oauth2의 getAttributes값이 너무 다양하기 때문에
+ex) id:1234 , sub:1234 , ... ,..... 다 다름
+그래서 spring에서 이 라이브러리 만들 때, 대표적인 것들만 제공
